@@ -1,133 +1,237 @@
-// =================================================
-// Welcome to NextJS ZBD Starter
-// =================================================
-//
-// The goal here is to showcase a simple example of
-// the @zbd/node library being used to interact with
-// the ZBD API on a NodeJS environment.
-
-// Check `/pages/api/wallet` to see how simple it is
-// to fetch/post information to the ZBD API
-
-// This index.js shows a simple way to fetch the
-// /api/wallet backend endpoint and showcase the
-// response data on the homepage.
-//
-// =================================================
-
-// Lib Imports
 import Head from 'next/head';
-import Link from 'next/link';
-import Image from 'next/image';
-import { PureComponent } from 'react';
-import { Inter } from 'next/font/google';
+import { useEffect, useState } from 'react';
 
-// Styles
 import styles from '@/styles/Home.module.css';
-
-// Fonts
-const inter = Inter({ subsets: ['latin'] });
-
-// Components
 import { SocialHeadTags } from '@/components/social-head-tags';
 
-export default class ZBDNextJSStarter extends PureComponent {
-  render() {
-    return (
-      <>
-        <Head>
-          <SocialHeadTags
-            title='ZBD + Next.js Starter Kit - ZBD API'
-            description='Open source starter kit for fullstack applications built on Next.js framework using ZBD for instant global payments.'
-            image='https://i.imgur.com/B8TuFvL.png'
-            url='https://nextjs.zbd.dev'
-          />
-        </Head>
-        <main className={styles.main}>
-          <div className={styles.description}>
+const projects = [
+  {
+    number: '01',
+    title: 'Arc / Financial clarity',
+    category: 'Product design · 2025',
+    description:
+      'A calmer way to understand money. I led the product direction, information architecture, and visual system for a personal finance platform.',
+    image:
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=85',
+    className: 'projectLarge',
+  },
+  {
+    number: '02',
+    title: 'Forma / Brand in motion',
+    category: 'Identity · 2024',
+    description:
+      'A flexible identity for a studio making tools for modern teams, built around a simple idea: structure should never feel rigid.',
+    image:
+      'https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1400&q=85',
+    className: 'projectTall',
+  },
+  {
+    number: '03',
+    title: 'Noma / Digital home',
+    category: 'Web design · 2024',
+    description:
+      'An editorial commerce experience for an independent interiors label, balancing tactile imagery with a precise browsing system.',
+    image:
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1400&q=85',
+    className: 'projectWide',
+  },
+];
+
+const services = [
+  ['01', 'Product design', 'From first sketch to shipped interface.'],
+  ['02', 'Visual identity', 'Distinctive systems that stay useful.'],
+  ['03', 'Web experiences', 'Editorial, expressive, and fast.'],
+];
+
+export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
+
+  useEffect(() => {
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add(styles.visible);
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll(`.${styles.reveal}`).forEach((element) => reveal.observe(element));
+    return () => reveal.disconnect();
+  }, []);
+
+  return (
+    <>
+      <Head>
+        <title>Alex Morgan — Independent Designer</title>
+        <meta
+          name="description"
+          content="Independent designer crafting thoughtful digital products, identities, and web experiences."
+        />
+        <SocialHeadTags
+          title="Alex Morgan — Independent Designer"
+          description="Independent designer crafting thoughtful digital products, identities, and web experiences."
+          image="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=80"
+          url="https://nextjs.zbd.dev"
+        />
+      </Head>
+
+      <main className={styles.main}>
+        <nav className={styles.nav} aria-label="Primary navigation">
+          <a className={styles.wordmark} href="#top" aria-label="Alex Morgan home">
+            AM<span>.</span>
+          </a>
+          <div className={`${styles.navLinks} ${menuOpen ? styles.navLinksOpen : ''}`}>
+            <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
+            <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
+            <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+          </div>
+          <a className={styles.availability} href="#contact">
+            <span /> Available for select projects
+          </a>
+          <button
+            className={styles.menuButton}
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
+            <span />
+            <span />
+          </button>
+        </nav>
+
+        <section className={styles.hero} id="top">
+          <div className={styles.heroEyebrow}>
+            <span>Independent designer</span>
+            <span>New York · Remote</span>
+          </div>
+          <h1 className={styles.heroTitle}>
+            I make digital things <em>feel</em> inevitable.
+          </h1>
+          <div className={styles.heroBottom}>
             <p>
-              Get started by editing&nbsp;
-              <code className={styles.code}>pages/index.js</code>
+              Strategy, product design, and visual identities for teams building what comes next.
             </p>
-            <div>
+            <a href="#work" className={styles.scrollLink}>
+              <span>Scroll to explore</span>
+              <span className={styles.arrow}>↓</span>
+            </a>
+          </div>
+          <div className={styles.heroOrb} aria-hidden="true" />
+        </section>
+
+        <section className={styles.work} id="work">
+          <div className={`${styles.sectionHeader} ${styles.reveal}`}>
+            <p className={styles.kicker}>Selected work</p>
+            <p className={styles.sectionNote}>A small selection of recent collaborations.</p>
+          </div>
+
+          <div className={styles.projectGrid}>
+            {projects.map((project, index) => (
+              <article
+                key={project.number}
+                className={`${styles.project} ${styles[project.className]} ${styles.reveal}`}
+                style={{ '--delay': `${index * 90}ms` }}
+                onClick={() => setActiveProject(project)}
+              >
+                <div className={styles.projectImageWrap}>
+                  <div
+                    className={styles.projectImage}
+                    style={{ backgroundImage: `url(${project.image})` }}
+                    role="img"
+                    aria-label={`${project.title} project preview`}
+                  />
+                  <span className={styles.projectView}>View case study ↗</span>
+                </div>
+                <div className={styles.projectMeta}>
+                  <div>
+                    <span className={styles.projectNumber}>{project.number}</span>
+                    <h2>{project.title}</h2>
+                  </div>
+                  <p>{project.category}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className={`${styles.intro} ${styles.reveal}`} id="about">
+          <p className={styles.kicker}>A little about me</p>
+          <div className={styles.introCopy}>
+            <h2>
+              Design is the space between <span>what works</span> and what people love to use.
+            </h2>
+            <div className={styles.introAside}>
               <p>
-                <Link href='/playground'>
-                  <b>Open ZBD Playground <span className={inter.className}>-&gt;</span></b>
-                </Link>
+                I&apos;m Alex, an independent designer with 9+ years shaping products, brands, and experiences for ambitious teams. I care about clear thinking, generous details, and making complex ideas feel obvious.
               </p>
+              <a href="#contact" className={styles.textLink}>More about me <span>↗</span></a>
             </div>
           </div>
-  
-          <div className={styles.center}>
-            <Image
-              className={styles.logo}
-              src="/zbd-next.png"
-              alt="ZBD + Next.js"
-              width={185}
-              height={99.61538462}
-              priority
-            />
+        </section>
+
+        <section className={`${styles.services} ${styles.reveal}`}>
+          <div className={styles.sectionHeader}>
+            <p className={styles.kicker}>What I do</p>
+            <p className={styles.sectionNote}>A focused practice, not a menu of everything.</p>
           </div>
-  
-          <div className={styles.grid}>
-            <a
-              href="https://github.com/zebedeeio/nextjs-zebedee-starter"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <h2 className={inter.className}>
-                Docs <span>-&gt;</span>
-              </h2>
-              <p className={inter.className}>
-                Detailed walkthroughs to get started with this kit.
-              </p>
-            </a>
-  
-            <a
-              href="https://docs.zebedee.io/docs/quick-start"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <h2 className={inter.className}>
-                Learn <span>-&gt;</span>
-              </h2>
-              <p className={inter.className}>
-                Find in-depth information about ZBD features and&nbsp;API.
-              </p>
-            </a>
-  
-            <a
-              href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fzebedeeio%2Fnextjs-zebedee-starter&env=ZBD_API_KEY&envDescription=Your%20ZBD%20project%20API%20key&demo-title=ZBD%20%2B%20Next.js%20Starter&demo-description=Starter%20kit%20for%20using%20ZBD%20API%20with%20Next.js%20fullstack%20applications&demo-url=https%3A%2F%2Fnextjs-zebedee-starter.vercel.app%2F&demo-image=https%3A%2F%2Fi.imgur.com%2FNf8wRgv.png"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <h2 className={inter.className}>
-                Deploy <span>-&gt;</span>
-              </h2>
-              <p className={inter.className}>
-                Instantly deploy this ZBD starter kit to Vercel.
-              </p>
-            </a>
-  
-            <a
-              href="https://www.npmjs.com/package/@zbd/node"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <h2 className={inter.className}>
-                @zbd/node <span>-&gt;</span>
-              </h2>
-              <p className={inter.className}>
-                Learn more about the ZBD SDK for NodeJS.
-              </p>
+          <div className={styles.serviceList}>
+            {services.map(([number, title, copy]) => (
+              <div className={styles.service} key={number}>
+                <span>{number}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+                <span className={styles.serviceArrow}>↗</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className={`${styles.statement} ${styles.reveal}`}>
+          <span className={styles.statementMark}>“</span>
+          <p>
+            The best work doesn&apos;t announce itself. It makes the next step feel like the only step.
+          </p>
+        </section>
+
+        <footer className={styles.footer} id="contact">
+          <div className={styles.footerTop}>
+            <p className={styles.kicker}>Have a good one in mind?</p>
+            <a className={styles.email} href="mailto:hello@alexmorgan.design">
+              Let&apos;s make it real <span>↗</span>
             </a>
           </div>
-        </main>
-      </>
-    )
-  }
+          <div className={styles.footerBottom}>
+            <span>© 2026 Alex Morgan</span>
+            <div>
+              <a href="#top">Back to top ↑</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href="https://www.are.na" target="_blank" rel="noreferrer">Are.na</a>
+            </div>
+          </div>
+        </footer>
+      </main>
+
+      {activeProject && (
+        <div className={styles.modalBackdrop} role="presentation" onClick={() => setActiveProject(null)}>
+          <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="case-study-title" onClick={(event) => event.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setActiveProject(null)} aria-label="Close case study">×</button>
+            <div className={styles.modalImage} style={{ backgroundImage: `url(${activeProject.image})` }} />
+            <div className={styles.modalContent}>
+              <span>{activeProject.category}</span>
+              <h2 id="case-study-title">{activeProject.title}</h2>
+              <p>{activeProject.description}</p>
+              <div className={styles.modalDetails}>
+                <span>Role <b>Design lead</b></span>
+                <span>Scope <b>Strategy · UI · Brand</b></span>
+                <span>Year <b>2024—25</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
